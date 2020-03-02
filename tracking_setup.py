@@ -55,11 +55,11 @@ def tracking_setup(S, band, reset_rate_khz, init_fraction_full_scale, phiO_numbe
 
     #We use the amplitude of the frequency swing and the standard deviation of the tracking error to turn off bad channels. 
     #To check the channels
-    S.check_lock(band)
+    channels_off = S.check_lock(band) # return channels off
+    channels_on = S.which_on(band)    # all of the channels on in a band at any given time
     S.tracking_setup(band=band,reset_rate_khz=reset_rate_khz,lms_freq_hz=reset_rate_khz*phiO_number,fraction_full_scale=frac_pp,make_plot=True,show_plot=False,save_plot=True,meas_lms_freq=True,channel=S.which_on(band))
-    channels=S.which_on(band)
-
-    return frac_pp,channels
+    
+    return frac_pp,channels_on, channels_off
 
 
 if __name__=='__main__':    
