@@ -9,7 +9,7 @@ import time
 import sys
 
 
-def tracking_setup(S, band, reset_rate_khz, init_fraction_full_scale, phiO_number, optimize_number=None):
+def tracking_resonator(S, band, reset_rate_khz, init_fraction_full_scale, phiO_number, optimize_number=None):
     """
     Measure least mean square freq (lms_freq) with all channels on 
     Run check_lock to kill poorly tracking channels or use tracking error to make own
@@ -17,7 +17,7 @@ def tracking_setup(S, band, reset_rate_khz, init_fraction_full_scale, phiO_numbe
     Return how many channels have been turned off and tracking arguments 
     Retune + rerun tracking setup not in measure mode with optimized parameters 
 
-    Retirns: Optimized tracking parameters, number of channels
+    Returns: Optimized tracking parameters, number of channels on/off
     Args:
         S: 
             Pysmurf control object
@@ -38,7 +38,7 @@ def tracking_setup(S, band, reset_rate_khz, init_fraction_full_scale, phiO_numbe
         lms_meas = np.max(S.lms_freq_hz)
         frac_pp = init_fraction_full_scale*(reset_rate_khz*phiO_number/lms_meas)
 
-        print ('Fraction full sclae = ',frac_pp)
+        print ('Fraction full sclae of '+str(phiO_number)'Phi = ',frac_pp)
 
     else:
         S.tracking_setup(band=band,reset_rate_khz=reset_rate_khz,lms_freq_hz=None,fraction_full_scale=init_fraction_full_scale,make_plot=True,show_plot=False,save_plot=True,meas_lms_freq=True,channel=S.which_on(band))
@@ -51,7 +51,7 @@ def tracking_setup(S, band, reset_rate_khz, init_fraction_full_scale, phiO_numbe
             frac_pp = init_fraction_full_scale*(reset_rate_khz*phiO_number/lms_meas)
             print ('Fraction full scale of the '+str(i)+' optimize:',frac_pp)
 
-        print ('Fraction full sclae = ',frac_pp)
+        print ('Fraction full sclae of '+str(phiO_number)'Phi = ',frac_pp)
 
     #We use the amplitude of the frequency swing and the standard deviation of the tracking error to turn off bad channels. 
     #To check the channels
@@ -96,11 +96,5 @@ if __name__=='__main__':
             cfg_file = args.config_file,
             setup = args.setup, make_logfile=False,
     )
-
-    S.stream_data_on() 
-    try:                                                                          
-        tracking_setup(S, args.band, args.reset_rate_khz, args.init_fraction_full_scale, args.phiO_number,args.optimize_number)
-    finally:
-        # Makes sure streaming is turned off if this funciton fails!
-        S.stream_data_off()
-
+                                                    
+    tracking_resonator(S, args.band, args.reset_rate_khz, args.init_fraction_full_scale, args.phiO_number,args.optimize_number)
