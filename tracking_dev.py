@@ -27,18 +27,27 @@ def tracking_resonator(S, band, reset_rate_khz, init_fraction_full_scale, phiO_n
             Fraction full scale is amplitude of the flux ramp, give an initial value then estimate the optimize value base on number of phi_0.
             The init fraction full scale value is [-1,1].
         phiO_number
-            Number of flux quantum in the SQUID. If you set your flux ramp amplitude = 5 Phi_0, it means after 5 Phi_0, you will reset the flux ramp amplitude, then the least mean frequency = 5*reset_rate_khz = 20 kHz
+            Number of flux quantum in the SQUID. It is usually around 4 - 6 Phi_0. If you set your flux ramp amplitude = 5 Phi_0, it means after 5 Phi_0, you will reset the flux ramp amplitude, then the least mean frequency = 5*reset_rate_khz = 20 kHz
         optimize_number
             The number of running tracking to optimize the fraction full scale
     """
 
     if optimize_number is None:
+        
         S.tracking_setup(band=band,reset_rate_khz=reset_rate_khz,lms_freq_hz=None,fraction_full_scale=init_fraction_full_scale,make_plot=True,show_plot=False,save_plot=True,meas_lms_freq=True,channel=S.which_on(band))
 
-        lms_meas = np.max(S.lms_freq_hz)
+        #lms_meas = np.max(S.lms_freq_hz)
+        lms_meas = S.lms_freq_hz[band]
         frac_pp = init_fraction_full_scale*(reset_rate_khz*phiO_number/lms_meas)
 
+<<<<<<< HEAD:tracking_setup.py
         print ('Fraction full sclae of '+str(phiO_number)'Phi = ',frac_pp)
+=======
+        print('Fraction full sclae of '+str(phiO_number)'Phi0 = ',frac_pp)
+
+        if (frac_pp >=0.99) or (frac_pp <= -0.99):
+            raise Exception('Change the phi0_number or initial fraction full scale to have fraction full scale [-1,1]')
+>>>>>>> developscript:tracking_dev.py
 
     else:
         S.tracking_setup(band=band,reset_rate_khz=reset_rate_khz,lms_freq_hz=None,fraction_full_scale=init_fraction_full_scale,make_plot=True,show_plot=False,save_plot=True,meas_lms_freq=True,channel=S.which_on(band))
@@ -47,11 +56,19 @@ def tracking_resonator(S, band, reset_rate_khz, init_fraction_full_scale, phiO_n
 
         for i in range(np.int(optimize_number)):
             S.tracking_setup(band=band,reset_rate_khz=reset_rate_khz,lms_freq_hz=reset_rate_khz*phiO_number,fraction_full_scale=frac_pp,make_plot=True,show_plot=False,save_plot=True,meas_lms_freq=True,channel=S.which_on(band))
-            lms_meas = np.max(S.lms_freq_hz)
+            #lms_meas = np.max(S.lms_freq_hz)
+            lms_meas = S.lms_freq_hz[band]
             frac_pp = init_fraction_full_scale*(reset_rate_khz*phiO_number/lms_meas)
-            print ('Fraction full scale of the '+str(i)+' optimize:',frac_pp)
+            print('Fraction full scale of the '+str(i)+' optimize:',frac_pp)
 
+        print('Fraction full sclae of '+str(phiO_number)'Phi0 = ',frac_pp)
+
+<<<<<<< HEAD:tracking_setup.py
         print ('Fraction full sclae of '+str(phiO_number)'Phi = ',frac_pp)
+=======
+        if (frac_pp >=0.99) or (frac_pp <= -0.99):
+            raise Exception('Change the phi0_number or initial fraction full scale to have fraction full scale [-1,1]')
+>>>>>>> developscript:tracking_dev.py
 
     #We use the amplitude of the frequency swing and the standard deviation of the tracking error to turn off bad channels. 
     #To check the channels
