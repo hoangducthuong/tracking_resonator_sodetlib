@@ -40,7 +40,7 @@ def tracking_resonator(S, band, reset_rate_khz, init_fraction_full_scale, phiO_n
         lms_meas = S.lms_freq_hz[band]
         frac_pp = init_fraction_full_scale*(reset_rate_khz*phiO_number/lms_meas)
 
-        print('Fraction full sclae of '+str(phiO_number)'Phi0 = ',frac_pp)
+        print('Fraction full sclae of '+str(phiO_number)+'Phi0 = ',frac_pp)
 
         if (frac_pp >=0.99) or (frac_pp <= -0.99):
             raise Exception('Change the phi0_number or initial fraction full scale to have fraction full scale [-1,1]')
@@ -57,7 +57,7 @@ def tracking_resonator(S, band, reset_rate_khz, init_fraction_full_scale, phiO_n
             frac_pp = init_fraction_full_scale*(reset_rate_khz*phiO_number/lms_meas)
             print('Fraction full scale of the '+str(i)+' optimize:',frac_pp)
 
-        print('Fraction full sclae of '+str(phiO_number)'Phi0 = ',frac_pp)
+        print('Fraction full sclae of '+str(phiO_number)+'Phi0 = ',frac_pp)
 
         if (frac_pp >=0.99) or (frac_pp <= -0.99):
             raise Exception('Change the phi0_number or initial fraction full scale to have fraction full scale [-1,1]')
